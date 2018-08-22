@@ -1,0 +1,69 @@
+<<<<<<< HEAD
+---
+- name: jenkins
+  box: centos/7
+  cpus: 2
+  memory: 4096
+  guest_port: 9000
+  host_port: 9000
+  package_manager: yum
+  packages:
+  - git
+  - nano
+  scripts:
+  - python_server
+  synced_folders:
+  - host: /Users/Admin/Desktop/Share
+    guest: /home/jenkins/synced 
+ 
+- name: server
+  box: centos/7
+  cpus: 2
+  memory: 4096
+  guest_port: 9000
+  host_port: 9001
+  package_manager: yum
+  packages:
+  - git
+  - nano
+  scripts:
+  - python_server 
+  synced_folders:
+  - host: /Users/Admin/Desktop/Share
+    guest: /home/jenkins/synced
+...
+=======
+---
+- name: jenkins
+  box: centos/7
+  cpus: 2
+  memory: 4096
+  guest_port: 9000
+  host_port: 9000
+  package_manager: yum
+  packages:
+  - git
+  - nano
+  scripts:
+  - python_server
+  synced_folders:
+  - host: /Users/Admin/Desktop/Share
+    guest: /home/jenkins/synced 
+ 
+- name: server
+  box: centos/7
+  cpus: 2
+  memory: 4096
+  guest_port: 9000
+  host_port: 9001
+  package_manager: yum
+  packages:
+  - git
+  - nano
+  scripts:
+  - python_server 
+  synced_folders:
+  - host: /Users/Admin/Desktop/Share
+    guest: /home/jenkins/synced
+...
+>>>>>>> 7512b0610b09eb1d01dea70303eda3fe3f838004

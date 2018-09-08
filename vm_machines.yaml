@@ -43,6 +43,7 @@
   - nano 
   - wget
   - unzip
+  - vim
   scripts:
   - terraform
   - google_cloud_sdk

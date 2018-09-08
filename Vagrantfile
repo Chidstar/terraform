@@ -29,10 +29,11 @@ Vagrant.configure("2") do |config|
     config.vm.define guest['name'] do |guest_vm|
 	set_box(guest, guest_vm)
 	set_cpus_and_memory(guest, guest_vm)
-#	install_packages(guest, guest_vm)
+	set_private_ip(guest, guest_vm)
+	install_packages(guest, guest_vm)
 	run_scripts(guest, guest_vm)
 	set_forward_ports(guest, guest_vm)
-#	set_synced_folders(guest, guest_vm)
+	set_synced_folders(guest, guest_vm)
     end
   end
 end
@@ -44,32 +45,36 @@ def set_cpus_and_memory(guest, guest_vm)
 	end
 end
 
+def set_private_ip(guest, guest_vm)
+	guest_vm.vm.network "private_network", ip: guest['private_ip']
+end
+
 def set_box(guest, guest_vm)
 	guest_vm.vm.box = guest['box'] 
 end
 
 def install_packages(guest, guest_vm)
-	unless guest['packages'].nil?
-		if guest['package_manager'] == "apk"
-			guest_vm.vm.provision "shell", inline: <<-SHELL
-				sudo #{guest['package_manager']} add #{guest['packages'].join(" ")}
-			SHELL
-		elsif guest['package_manager'] == "apt"	
-			guest_vm.vm.provision "shell", inline: <<-SHELL
-				sudo #{guest['package_manager'].join("-get")} install #{guest['packages'].join(" ")}
-			SHELL	
+         unless guest['packages'].nil?
+                if guest['package_manager'] == "apk"
+                        guest_vm.vm.provision "shell", inline: <<-SHELL
+                                sudo #{guest['package_manager']} add #{guest['packages'].join(" ")}
+                        SHELL
+                elsif guest['package_manager'] == "apt"
+                        guest_vm.vm.provision "shell", inline: <<-SHELL
+                                sudo #{guest['package_manager'].join("-get")} install #{guest['packages'].join(" ")}
+                        SHELL
 
-		else
-			print "sudo #{guest['package_manager']} install -y #{guest['packages'].join(" ")}" 
-			guest_vm.vm.provision "shell", inline: <<-SHELL
-			sudo #{guest['package_manager']} install -y #{guest['packages'].join(" ")}
-			SHELL
-		end
-	end
+                else
+                        #print "sudo #{guest['package_manager']} install -y #{guest['packages'].join(" ")}"
+                        guest_vm.vm.provision "shell", inline: <<-SHELL
+                        sudo #{guest['package_manager']} install -y #{guest['packages'].join(" ")}
+                        SHELL
+                end
+        end
 end
 
 def run_scripts(guest, guest_vm)
-	install_packages(guest, guest_vm)
+#	install_packages(guest, guest_vm)
 	unless guest['scripts'].nil?
 		guest['scripts'].each do |script|
 			guest_vm.vm.provision "shell", privileged: false, path: "/Users/Admin/Documents/terraform/vagrant_scripts/#{script}"
@@ -95,7 +100,8 @@ end
   #      vb.memory = 2048
   #	vb.cpus = 2
   #  end
-  #  jenkins.vm.network "forwarded_port", guest: 9000, host: 9000, host_ip: "127.0.0.1"
+  #  jenkins.vm.network
+  #  "forwarded_port", guest: 9000, host: 9000, host_ip: "127.0.0.1"
   #  jenkins.vm.provision "shell", path: "/Users/Admin/Documents/vagrant-first/vagrant-project/vagrant_scripts/python_server"
   #end
 
